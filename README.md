@@ -1,1 +1,1 @@
-# amenouzume
+﻿# 天宇受売命
