@@ -1,16 +1,11 @@
 ﻿#include "pch.h"
 
-#include <pathcch.h>
-#include <strsafe.h>
 #include <malloc.h> // CRT 
 
 #define TUBAKIGISHI_HOST 1
 #include "tubakigishi.h"
 
 #include "app_log.h"
-
-#pragma comment( lib , "Ole32.lib" )
-#pragma comment( lib , "pathcch.lib" )
 
 extern "C"{
   __declspec( dllexport ) uint32_t get_app_serial();
@@ -150,7 +145,9 @@ static int entryPoint( int argc , char* argv[] )
   }
   return EXIT_SUCCESS;
 }
-                       
+
+
+
 int main(int argc ,char* argv[])
 {
   intptr_t const ptr = _get_heap_handle();
@@ -173,6 +170,7 @@ int main(int argc ,char* argv[])
 
   int exitstatus;
   do{
+    std::locale::global( std::locale("") );
     HRESULT hr = CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED  );
     if( S_OK != hr ){
       exitstatus = 3;
