@@ -8,14 +8,17 @@
 **/*.gch
 **/*.pch
 
+# Executables
+/*.exe
+/*.exe.manifest
+
 # Compiled libraries
-/*.dll
 /*.lib
 /*.ilk
 /*.exp
 /*.pdb
-# Executables
-/*.exe
+/*.dll
+/*.dll.manifest
 
 # Emacs backup files
 **/*~
