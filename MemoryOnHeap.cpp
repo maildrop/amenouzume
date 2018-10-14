@@ -150,27 +150,30 @@ static int entryPoint( int argc , char* argv[] )
 
 int main(int argc ,char* argv[])
 {
-  intptr_t const ptr = _get_heap_handle();
-  { // Low Fragment Heap の設定 
-    if( GetProcessHeap() != reinterpret_cast<HANDLE>(ptr) ){
-      ULONG ulEnableLFH = 2;
-      if( !HeapSetInformation( reinterpret_cast<HANDLE>(ptr) ,
-                               HeapCompatibilityInformation ,
-                               &ulEnableLFH ,
-                               sizeof( ulEnableLFH ) ) ){
-        // LFH 失敗 
+  { // CRT ヒープの設定
+    intptr_t const ptr = _get_heap_handle();
+    { // Low Fragment Heap の設定 
+      if( GetProcessHeap() != reinterpret_cast<HANDLE>(ptr) ){
+        ULONG ulEnableLFH = 2;
+        if( !HeapSetInformation( reinterpret_cast<HANDLE>(ptr) ,
+                                 HeapCompatibilityInformation ,
+                                 &ulEnableLFH ,
+                                 sizeof( ulEnableLFH ) ) ){
+          // LFH 失敗 
+        }
       }
     }
+    // Heap 破壊を早期に発見するために、例外を飛ばすようにする。
+    if(! HeapSetInformation( reinterpret_cast<HANDLE>(ptr) , HeapEnableTerminationOnCorruption , nullptr , 0 ) ){
+      std::cerr << "HeapEanbleTerminationOnCorruption fault" << std::endl;
+      return 3;
+    }
   }
-  // Heap 破壊を早期に発見するために、例外を飛ばすようにする。
-  if(! HeapSetInformation( reinterpret_cast<HANDLE>(ptr) , HeapEnableTerminationOnCorruption , nullptr , 0 ) ){
-    std::cerr << "HeapEanbleTerminationOnCorruption fault" << std::endl;
-    return 3;
-  }
+
+  std::locale::global( std::locale("") );
 
   int exitstatus;
   do{
-    std::locale::global( std::locale("") );
     HRESULT hr = CoInitializeEx( nullptr , COINIT_APARTMENTTHREADED  );
     if( S_OK != hr ){
       exitstatus = 3;
@@ -180,7 +183,19 @@ int main(int argc ,char* argv[])
           CoUninitialize();
         }
       } coinit;
+
+      {
+        INITCOMMONCONTROLSEX init_commonctrls = {
+          sizeof( INITCOMMONCONTROLSEX ),
+          ICC_WIN95_CLASSES };
+        
+        if( ! InitCommonControlsEx(&init_commonctrls) ){
+          return 3;
+        }
+      }
+
       exitstatus = entryPoint( argc, argv );
+
     }
   }while( false );
   return exitstatus;
