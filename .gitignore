@@ -20,6 +20,10 @@
 /*.dll
 /*.dll.manifest
 
+/GPATH
+/GTAGS
+/GRTAGS
+
 # Emacs backup files
 **/*~
 
