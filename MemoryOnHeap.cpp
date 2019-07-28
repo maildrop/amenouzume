@@ -1,10 +1,8 @@
 ﻿#include "pch.h"
 
 #include <malloc.h> // CRT 
-
 #define TUBAKIGISHI_HOST 1
 #include "tubakigishi.h"
-
 #include "app_log.h"
 
 extern "C"{
@@ -117,7 +115,6 @@ static int entryPoint( int argc , char* argv[] )
     log( module.c_str() );
   }
   log( L"MODULE  END " );
-  
 
   std::vector<std::tuple<HANDLE,int(*)(int,HMODULE),std::wstring>> plugins{};
 

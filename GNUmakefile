@@ -13,7 +13,7 @@ CCOPT:=-nologo -EHsc -W4 -WX -MDd -Zi -D_UNICODE=1 -DUNICODE=1
 
 dll_TARGET=a.dll
 exe_TARGET=MemoryOnHeap.exe
-all_TARGET=$(exe_TARGET) $(dll_TARGET)
+all_TARGET=$(exe_TARGET) $(dll_TARGET) amenouzume.obj
 
 all: compile
 
@@ -32,7 +32,7 @@ clean:
 a.dll: a.obj pch.obj tubakigishi.obj
 
 a.obj: a.cpp pch.h tubakigishi.h
-
+amenouzume.obj: amenouzume.cpp pch.h 
 MemoryOnHeap.exe: MemoryOnHeap.obj app_log.obj pch.obj
 
 MemoryOnHeap.obj: MemoryOnHeap.cpp pch.h tubakigishi.h app_log.h 
